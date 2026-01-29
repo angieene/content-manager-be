@@ -28,7 +28,7 @@ export class User {
 
   @Column({ name: 'refresh_token', nullable: true })
   @Exclude()
-  refreshToken: string;
+  refreshToken: string | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

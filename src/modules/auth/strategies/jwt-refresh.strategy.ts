@@ -10,15 +10,24 @@ export class JwtRefreshStrategy extends PassportStrategy(
   'jwt-refresh',
 ) {
   constructor(private configService: ConfigService) {
+    const secret = configService.get<string>('JWT_REFRESH_SECRET');
+    if (!secret) {
+      throw new Error('JWT_REFRESH_SECRET is not configured');
+    }
+
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get<string>('JWT_REFRESH_SECRET'),
+      secretOrKey: secret,
       passReqToCallback: true,
     });
   }
 
   validate(req: Request, payload: any) {
-    const refreshToken = req.get('Authorization').replace('Bearer', '').trim();
+    const authHeader = req.get('Authorization');
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header missing');
+    }
+    const refreshToken = authHeader.replace('Bearer', '').trim();
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token missing');
     }

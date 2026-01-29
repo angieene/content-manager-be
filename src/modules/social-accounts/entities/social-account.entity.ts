@@ -44,10 +44,10 @@ export class SocialAccount {
 
   // Encrypted token storage
   @Column({ name: 'encrypted_access_token', type: 'text' })
-  private encryptedAccessToken: string;
+  private encryptedAccessToken: string | null;
 
   @Column({ name: 'encrypted_refresh_token', type: 'text', nullable: true })
-  private encryptedRefreshToken: string;
+  private encryptedRefreshToken: string | null;
 
   @Column({ name: 'token_expires_at', type: 'timestamp', nullable: true })
   tokenExpiresAt: Date;
@@ -82,14 +82,14 @@ export class SocialAccount {
   }
 
   // Getter and setter for accessToken with automatic encryption/decryption
-  get accessToken(): string {
+  get accessToken(): string | null {
     if (!this.encryptedAccessToken) {
       return null;
     }
     return this.encryptionUtil.decrypt(this.encryptedAccessToken);
   }
 
-  set accessToken(token: string) {
+  set accessToken(token: string | null) {
     if (!token) {
       this.encryptedAccessToken = null;
       return;

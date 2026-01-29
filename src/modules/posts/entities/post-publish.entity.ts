@@ -36,7 +36,7 @@ export class PostPublish {
   @Column({
     type: 'enum',
     enum: PostStatus,
-    default: PostStatus.PENDING,
+    default: PostStatus.SCHEDULED,
   })
   status: PostStatus;
 
